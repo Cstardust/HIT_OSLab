@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "user.h": "c"
+        "user.h": "c",
+        "stat.h": "c",
+        "types.h": "c",
+        "stddef.h": "c",
+        "param.h": "c",
+        "unistd.h": "c"
     }
 }

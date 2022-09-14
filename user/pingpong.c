@@ -47,7 +47,7 @@ int main(int argc,char *argv[])
         close(pipefd_a[1]);
         close(pipefd_b[0]);
 
-        wait(NULL);
+        wait(nullptr);
     }
     exit(0);
 }
