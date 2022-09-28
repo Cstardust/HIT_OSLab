@@ -82,18 +82,21 @@ fileclose(struct file *f)
   }
 }
 
+//  kernel
 // Get metadata about file f.
 // addr is a user virtual address, pointing to a struct stat.
 int
-filestat(struct file *f, uint64 addr)
+filestat(struct file *f, uint64 addr)   //  addr is a pointer , pointing to a struct stst
 {
   struct proc *p = myproc();
-  struct stat st;
+  struct stat st;                       //  kernel空间创建的st
   
   if(f->type == FD_INODE || f->type == FD_DEVICE){
     ilock(f->ip);
-    stati(f->ip, &st);
-    iunlock(f->ip);
+    stati(f->ip, &st);                  //  通过stati 获取到inode节点信息 存入kernel的st
+    iunlock(f->ip);              
+    //  copyout : 将内核空间的数据传递给用户空间
+      //  将kernel的st 拷贝给 地址addr 大小为sizeof(st) 的用户空间
     if(copyout(p->pagetable, addr, (char *)&st, sizeof(st)) < 0)
       return -1;
     return 0;

@@ -127,6 +127,7 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  p->trace_mask = 0;      //  新分配的进程的默认mask
   return p;
 }
 
@@ -260,7 +261,7 @@ fork(void)
 {
   int i, pid;
   struct proc *np;
-  struct proc *p = myproc();
+  struct proc *p = myproc();    //  获取调用fork的进程proc
 
   // Allocate process.
   if((np = allocproc()) == 0){
@@ -268,6 +269,9 @@ fork(void)
   }
 
   // Copy user memory from parent to child.
+  
+  np->trace_mask = p->trace_mask;
+  
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
     freeproc(np);
     release(&np->lock);
@@ -692,4 +696,37 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+
+
+int 
+get_unused_proc()
+{
+  int cnt = 0;
+  struct proc* p = 0;
+  for(p = proc; p < &proc[NPROC]; p++) {
+      acquire(&(p->lock));
+      if(p->state == UNUSED){
+        ++cnt;
+      }
+      release(&(p->lock));
+  }
+  return cnt;
+}
+
+int 
+get_unused_fd()
+{
+  int cnt = 0;
+  struct proc *p = myproc();
+  for(int i=0;i<NOFILE;++i)
+  {
+    acquire(&(proc->lock));
+    if(p->ofile[i] == 0){
+      ++cnt;
+    }
+    release(&(proc->lock));
+  }
+  return cnt;
 }

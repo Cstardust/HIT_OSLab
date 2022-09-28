@@ -110,8 +110,10 @@ sys_fstat(void)
   struct file *f;
   uint64 st; // user pointer to struct stat
 
-  if(argfd(0, 0, &f) < 0 || argaddr(1, &st) < 0)
+  if(argfd(0, 0, &f) < 0 || argaddr(1, &st) < 0)    //  st由user传进来
     return -1;
+  //  fstat陷入内核 调用sys_fstat 最终执行filestat
+    //  st是user传入的参数  
   return filestat(f, st);
 }
 
