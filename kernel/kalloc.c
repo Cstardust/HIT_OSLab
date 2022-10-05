@@ -90,7 +90,7 @@ kalloc(void)
   return (void *)r;
 }
 
-//  统计有多少free memroy
+//  统计os总共有多少free memroy
 //  success : return xxx bytes
 //  fail    : return -1
 int 
